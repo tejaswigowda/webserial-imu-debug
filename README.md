@@ -2,7 +2,7 @@
 
 ## Send space delimited X Y Z values via serial port to visualize your IMU orientation output.
 
-<img src='docs/demo.webp'>
+<img src='demo.webp'>
 
 
 ## Acknowledgements
