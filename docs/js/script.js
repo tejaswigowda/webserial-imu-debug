@@ -8,10 +8,6 @@
 /* global TextDecoderStream */
 'use strict';
 
-import * as THREE from 'https://threejs.org/build/three.module.js';
-import {OrbitControls} from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
-import {OBJLoader} from 'https://threejs.org/examples/jsm/loaders/OBJLoader.js';
-
 let port;
 let reader;
 let inputDone;
@@ -31,7 +27,6 @@ const butConnect = document.getElementById('butConnect');
 const butClear = document.getElementById('butClear');
 const baudRate = document.getElementById('baudRate');
 const autoscroll = document.getElementById('autoscroll');
-const showTimestamp = document.getElementById('showTimestamp');
 const lightSS = document.getElementById('light');
 const darkSS = document.getElementById('dark');
 const calContainer = document.getElementById('calibration');
@@ -43,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   butConnect.addEventListener('click', clickConnect);
   butClear.addEventListener('click', clickClear);
   autoscroll.addEventListener('click', clickAutoscroll);
-  showTimestamp.addEventListener('click', clickTimestamp);
   baudRate.addEventListener('change', changeBaudRate);
 
   if ('serial' in navigator) {
@@ -125,13 +119,6 @@ async function readLoop() {
 
 function logData(line) {
   // Update the Log
-  if (showTimestamp.checked) {
-    let d = new Date();
-    let timestamp = d.getHours() + ":" + `${d.getMinutes()}`.padStart(2, 0) + ":" +
-        `${d.getSeconds()}`.padStart(2, 0) + "." + `${d.getMilliseconds()}`.padStart(3, 0);
-    log.innerHTML += '<span class="timestamp">' + timestamp + ' -> </span>';
-    d = null;
-  }
   log.innerHTML += line+ "<br>";
 
   // Remove old log content
@@ -183,14 +170,6 @@ async function clickConnect() {
  */
 async function clickAutoscroll() {
   saveSetting('autoscroll', autoscroll.checked);
-}
-
-/**
- * @name clickTimestamp
- * Change handler for the Show Timestamp checkbox.
- */
-async function clickTimestamp() {
-  saveSetting('timestamp', showTimestamp.checked);
 }
 
 /**
@@ -266,7 +245,6 @@ function initBaudRate() {
 function loadAllSettings() {
   // Load all saved settings or defaults
   autoscroll.checked = loadSetting('autoscroll', true);
-  showTimestamp.checked = loadSetting('timestamp', false);
   baudRate.value = loadSetting('baudrate', 9600);
 }
 
