@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/dark.css"  id="dark"  class="alternate" disabled>
 
     <!-- import the webpage's javascript file -->
-    <script type="module" src="js/script.js" defer></script>
+    <script src="js/script.js" defer></script>
   </head>
   <body>
     <header class="header">
@@ -37,8 +37,7 @@
         <div id="calibration" class="calibration-container"></div>
       </div>
       <div class="controls">
-        <input type="checkbox" id="autoscroll"> Autoscroll
-        <button id="butClear" type="button">Clear</button>
+        <button onclick="calibrate()" type="button">Calibrate</button>
       </div>
       <!--<textarea id="log" readonly></textarea>-->
     </main>

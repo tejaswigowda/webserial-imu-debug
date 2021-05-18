@@ -1,13 +1,3 @@
-// let the editor know that `Chart` is defined by some code
-// included in another file (in this case, `index.html`)
-// Note: the code will still work without this line, but without it you
-// will see an error in the editor
-/* global THREE */
-/* global TransformStream */
-/* global TextEncoderStream */
-/* global TextDecoderStream */
-'use strict';
-
 let port;
 let reader;
 let inputDone;
@@ -24,9 +14,7 @@ const maxLogLength = 500;
 const baudRates = [300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 74880, 115200, 230400, 250000, 500000, 1000000, 2000000];
 const log = document.getElementById('log');
 const butConnect = document.getElementById('butConnect');
-const butClear = document.getElementById('butClear');
 const baudRate = document.getElementById('baudRate');
-const autoscroll = document.getElementById('autoscroll');
 const lightSS = document.getElementById('light');
 const darkSS = document.getElementById('dark');
 const calContainer = document.getElementById('calibration');
@@ -36,8 +24,6 @@ const logContainer = document.getElementById("log-container");
 
 document.addEventListener('DOMContentLoaded', () => {
   butConnect.addEventListener('click', clickConnect);
-  butClear.addEventListener('click', clickClear);
-  autoscroll.addEventListener('click', clickAutoscroll);
   baudRate.addEventListener('change', changeBaudRate);
 
   if ('serial' in navigator) {
@@ -107,7 +93,7 @@ async function readLoop() {
     const {value, done} = await reader.read();
     if (value) {
       let plotdata;
-        orientation = value.trim().split(" ").map(x=>+x);
+      orientation = value.trim().split(" ").map(x=>+x);
     }
     if (done) {
       console.log('[readLoop] DONE', done);
@@ -119,7 +105,7 @@ async function readLoop() {
 
 function logData(line) {
   // Update the Log
-  log.innerHTML += line+ "<br>";
+  log.innerHTML = "<h1>"+line.replace(/\s/g,"<br>")+ "</h1>";
 
   // Remove old log content
   if (log.textContent.split("\n").length > maxLogLength + 1) {
@@ -127,9 +113,6 @@ function logData(line) {
     log.innerHTML = logLines.splice(-maxLogLength).join("<br>\n");
   }
 
-  if (autoscroll.checked) {
-    log.scrollTop = log.scrollHeight
-  }
 }
 
 function enableStyleSheet(node, enabled) {
@@ -164,13 +147,6 @@ async function clickConnect() {
   toggleUIConnected(true);
 }
 
-/**
- * @name clickAutoscroll
- * Change handler for the Autoscroll checkbox.
- */
-async function clickAutoscroll() {
-  saveSetting('autoscroll', autoscroll.checked);
-}
 
 /**
  * @name changeBaudRate
@@ -244,8 +220,7 @@ function initBaudRate() {
 
 function loadAllSettings() {
   // Load all saved settings or defaults
-  autoscroll.checked = loadSetting('autoscroll', true);
-  baudRate.value = loadSetting('baudrate', 9600);
+  baudRate.value = loadSetting('baudrate', 115200);
 }
 
 function loadSetting(setting, defaultValue) {
@@ -264,18 +239,25 @@ function saveSetting(setting, value) {
 }
 
 
-function render() {
-  updateCube(360-orientation[2],orientation[0],orientation[1]);
-  requestAnimationFrame(render);
-}
 
-requestAnimationFrame(render);
 
-var xZ= 176.44;
-var yZ = -6.75
-var zZ = -174.81
-
-function updateCube(x,y,z)
+function updateCube()
 {
-  document.getElementById("cube").style.transform = 'translateZ(-100px) rotateX('+(x+xZ)+'deg) rotateY('+(y+yZ)+'deg) rotateZ('+(z+zZ)+'deg)'
+  x = 360- orientation[2]
+  y = orientation[0]
+  z = orientation[1]
+  console.log(x,y,z)
+  document.getElementById("cube").style.transform = 'translateZ(-100px) rotateX('+(x-xZ)+'deg) rotateY('+(y-yZ)+'deg) rotateZ('+(z-zZ)+'deg)'
 }
+
+var xZ= 0
+var yZ = 0 
+var zZ = 0
+function calibrate()
+{
+  xZ = 360- orientation[2]
+  yZ = orientation[0]
+  zZ = orientation[1]
+}
+
+setInterval("updateCube()",1)

@@ -50,19 +50,12 @@ void loop() {
   unsigned long tStart = micros();
   sensors_event_t orientationData , linearAccelData;
   bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
-  //  bno.getEvent(&angVelData, Adafruit_BNO055::VECTOR_GYROSCOPE);
-  bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
-
-  xPos = xPos + ACCEL_POS_TRANSITION * linearAccelData.acceleration.x;
-  yPos = yPos + ACCEL_POS_TRANSITION * linearAccelData.acceleration.y;
-
-  // velocity of sensor in the direction it's facing
-  headingVel = ACCEL_VEL_TRANSITION * linearAccelData.acceleration.x / cos(DEG_2_RAD * orientationData.orientation.x);
 
   if (printCount * BNO055_SAMPLERATE_DELAY_MS >= PRINT_DELAY_MS) {
 
 
       /* Display the floating point data */
+        Serial.print(" ");
   Serial.print(orientationData.orientation.x, 4);
   Serial.print(" ");
   Serial.print(orientationData.orientation.y, 4);
