@@ -248,18 +248,23 @@ function updateCube()
   y = orientation[2]
   z = orientation[3]
   var q = new Quaternion(w,x,y,z);
+  var qC = new Quaternion(wZ,xZ,yZ,zZ).inverse()
   console.log(w, x,y,z)
-  document.getElementById("cube").style.transform = 'translateZ(-100px) matrix3d(' + q.conjugate().toMatrix4() + ')';
+  document.getElementById("cube").style.transform = 'translateZ(-100px) matrix3d(' + q.mul(qC).toMatrix4() + ')';
 }
 
+var wZ= 0
 var xZ= 0
 var yZ = 0 
-var zZ = 0
+var zZ = 1
+
+
 function calibrate()
 {
-  xZ = 360- orientation[2]
-  yZ = orientation[0]
-  zZ = orientation[1]
+  wZ = orientation[0]
+  xZ = orientation[1]
+  yZ = orientation[2]
+  zZ = orientation[3]
 }
 
 setInterval("updateCube()",1)
