@@ -52,16 +52,27 @@ void loop() {
   bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
 
   if (printCount * BNO055_SAMPLERATE_DELAY_MS >= PRINT_DELAY_MS) {
+    imu::Quaternion quat = bno.getQuat();
 
+  Serial.print(" ");
+  Serial.print((float)quat.w());
+  Serial.print(F(" "));
+  Serial.print((float)quat.x());
+  Serial.print(F(" "));
+  Serial.print((float)quat.y());
+  Serial.print(F(" "));
+  Serial.print((float)quat.z());
+  Serial.println(F(""));
 
-      /* Display the floating point data */
-        Serial.print(" ");
+      /* 
+  Serial.print(" ");
   Serial.print(orientationData.orientation.x, 4);
   Serial.print(" ");
   Serial.print(orientationData.orientation.y, 4);
   Serial.print(" ");
   Serial.print(orientationData.orientation.z, 4);
   Serial.println("");
+  */
 
     printCount = 0;
   }

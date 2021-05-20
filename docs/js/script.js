@@ -243,11 +243,13 @@ function saveSetting(setting, value) {
 
 function updateCube()
 {
-  x = 360- orientation[2]
-  y = orientation[0]
-  z = orientation[1]
-  console.log(x,y,z)
-  document.getElementById("cube").style.transform = 'translateZ(-100px) rotateX('+(x-xZ)+'deg) rotateY('+(y-yZ)+'deg) rotateZ('+(z-zZ)+'deg)'
+  w = orientation[0]
+  x = orientation[1]
+  y = orientation[2]
+  z = orientation[3]
+  var q = new Quaternion(w,x,y,z);
+  console.log(w, x,y,z)
+  document.getElementById("cube").style.transform = 'translateZ(-100px) matrix3d(' + q.conjugate().toMatrix4() + ')';
 }
 
 var xZ= 0
