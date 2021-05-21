@@ -1,6 +1,6 @@
 # webserial-imu-debug
 
-## Send space delimited W X Y Z quarternion values via serial port to visualize your IMU orientation output.
+## Send space delimited W X Y Z quaternions via serial port to visualize your IMU orientation output.
 
 <img src='demo.webp'>
 
