@@ -297,16 +297,10 @@ const animate = function () {
   let rawQ = new THREE.Quaternion(orientationQ[1], orientationQ[2], orientationQ[3], orientationQ[0]);
   let refQ = new THREE.Quaternion(xZ, yZ, zZ, wZ);
 
-  // rotate along reference quaternion
-
   var refQInverse = new THREE.Quaternion().copy(refQ).invert();
-
-  // Then multiply the inverse of the reference quaternion with the raw quaternion
   var transformedQ = new THREE.Quaternion().multiplyQuaternions(refQInverse, rawQ);
 
   mesh.quaternion.copy(transformedQ);
-
-
   renderer.render(scene, camera);
 };
 
