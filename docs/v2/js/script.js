@@ -251,6 +251,8 @@ function calibrate()
   xZ = orientationQ[1]
   yZ = orientationQ[2]
   zZ = orientationQ[3]
+  // reset orbit controls
+  controls.reset();
 }
 
 const geometry = new THREE.BoxGeometry( 25, 25, 25 );
@@ -291,6 +293,10 @@ const frontSpot2 = new THREE.SpotLight(0xddddce);
 frontSpot2.position.set(-500, -500, -500);
 scene.add(frontSpot2);
 
+// orbit controls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
 const animate = function () {
   requestAnimationFrame(animate);
 
@@ -300,8 +306,11 @@ const animate = function () {
   var refQInverse = new THREE.Quaternion().copy(refQ).invert();
   var transformedQ = new THREE.Quaternion().multiplyQuaternions(refQInverse, rawQ);
 
-  mesh.quaternion.copy(transformedQ);
-  
+  transformedQ = swapYZAxesInQuaternion(transformedQ);
+//  mesh.quaternion.copy(transformedQ);
+
+  mesh.rotation.setFromQuaternion(transformedQ);
+
   renderer.render(scene, camera);
 };
 
