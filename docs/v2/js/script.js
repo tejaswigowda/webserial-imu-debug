@@ -279,6 +279,10 @@ scene.add(mesh);
 
 camera.position.z = 5;
 
+// add axes
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+
 const frontSpot = new THREE.SpotLight(0xeeeece);
 frontSpot.position.set(1000, 1000, 1000);
 scene.add(frontSpot);
@@ -289,15 +293,24 @@ scene.add(frontSpot2);
 
 const animate = function () {
   requestAnimationFrame(animate);
-  let q = new THREE.Quaternion(orientationQ[1], orientationQ[2], orientationQ[3], orientationQ[0]);
-  q = calibrateQuaternion(q, new THREE.Quaternion(xZ, yZ, zZ, wZ));
-  q = swapXZAxesInQuaternion(q);
+  let rawQ = new THREE.Quaternion(orientationQ[1], orientationQ[2], orientationQ[3], orientationQ[0]);
+  var rawE = new THREE.Euler().setFromQuaternion(rawQ);
+  var cQ = new THREE.Quaternion(xZ, yZ, zZ, wZ);
+  var calE = new THREE.Euler().setFromQuaternion(cQ);
 
-
+  /*
+//  q = invertXAxisInQuaternion(q);
+  q = swapYZAxesInQuaternion(q);
   mesh.quaternion.w = q.w;
   mesh.quaternion.x = q.x;
   mesh.quaternion.y = q.y;
   mesh.quaternion.z = q.z;
+  */
+
+  mesh.rotation.x = rawE.x - calE.x;
+  mesh.rotation.y = rawE.y - calE.y;
+  mesh.rotation.z = rawE.z - calE.z;
+
   renderer.render(scene, camera);
 };
 
@@ -341,34 +354,16 @@ function swapYZAxesInQuaternion(quat) {
 
 
 function invertXAxisInQuaternion(quat) {
-  // Create a quaternion that represents a 180-degree rotation around the X axis
-  let invertQuat = new THREE.Quaternion();
-  invertQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI); // 180-degree rotation around X
-  
-  // Apply the inversion quaternion to the original quaternion
-  let invertedQuat = quat.clone().multiply(invertQuat); // Multiply to apply rotation
-  
-  return invertedQuat;
-}
-
-function invertYAxisInQuaternion(quat) {
   // Create a quaternion representing a 180-degree rotation around the Y axis
-  let invertQuat = new THREE.Quaternion();
-  invertQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI); // 180-degree rotation around Y
+  let invertYQuat = new THREE.Quaternion();
+  invertYQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI); // 180-degree rotation around Y
 
-  // Apply the inversion quaternion to the original quaternion
-  let invertedQuat = quat.clone().multiply(invertQuat); // Multiply to apply the inversion
-  
-  return invertedQuat;
-}
-
-function invertZAxisInQuaternion(quat) {
   // Create a quaternion representing a 180-degree rotation around the Z axis
-  let invertQuat = new THREE.Quaternion();
-  invertQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI); // 180-degree rotation around Z
+  let invertZQuat = new THREE.Quaternion();
+  invertZQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI); // 180-degree rotation around Z
 
-  // Apply the inversion quaternion to the original quaternion
-  let invertedQuat = quat.clone().multiply(invertQuat); // Multiply to apply the inversion
+  // Apply the inversion quaternions to the original quaternion
+  let invertedQuat = quat.clone().premultiply(invertYQuat).premultiply(invertZQuat); // Pre-multiply to apply rotation first
   
   return invertedQuat;
 }
