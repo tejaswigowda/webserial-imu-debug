@@ -301,6 +301,7 @@ const animate = function () {
   var transformedQ = new THREE.Quaternion().multiplyQuaternions(refQInverse, rawQ);
 
   mesh.quaternion.copy(transformedQ);
+  
   renderer.render(scene, camera);
 };
 
