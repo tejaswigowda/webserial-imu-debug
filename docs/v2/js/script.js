@@ -293,23 +293,19 @@ scene.add(frontSpot2);
 
 const animate = function () {
   requestAnimationFrame(animate);
+
   let rawQ = new THREE.Quaternion(orientationQ[1], orientationQ[2], orientationQ[3], orientationQ[0]);
-  var rawE = new THREE.Euler().setFromQuaternion(rawQ);
-  var cQ = new THREE.Quaternion(xZ, yZ, zZ, wZ);
-  var calE = new THREE.Euler().setFromQuaternion(cQ);
+  let refQ = new THREE.Quaternion(xZ, yZ, zZ, wZ);
 
-  /*
-//  q = invertXAxisInQuaternion(q);
-  q = swapYZAxesInQuaternion(q);
-  mesh.quaternion.w = q.w;
-  mesh.quaternion.x = q.x;
-  mesh.quaternion.y = q.y;
-  mesh.quaternion.z = q.z;
-  */
+  // rotate along reference quaternion
 
-  mesh.rotation.x = rawE.x - calE.x;
-  mesh.rotation.y = rawE.y - calE.y;
-  mesh.rotation.z = rawE.z - calE.z;
+  var refQInverse = new THREE.Quaternion().copy(refQ).invert();
+
+  // Then multiply the inverse of the reference quaternion with the raw quaternion
+  var transformedQ = new THREE.Quaternion().multiplyQuaternions(refQInverse, rawQ);
+
+  mesh.quaternion.copy(transformedQ);
+
 
   renderer.render(scene, camera);
 };
