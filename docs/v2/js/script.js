@@ -58,6 +58,7 @@ async function connect() {
     toggleUIConnected(false);
     await disconnect();
   });
+  controls.reset();
 }
 
 /**
@@ -296,6 +297,7 @@ scene.add(frontSpot2);
 // orbit controls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+
 
 const animate = function () {
   requestAnimationFrame(animate);
