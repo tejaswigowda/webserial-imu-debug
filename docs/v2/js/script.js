@@ -311,8 +311,9 @@ const animate = function () {
   transformedQ = swapYZAxesInQuaternion(transformedQ);
 //  mesh.quaternion.copy(transformedQ);
 
-  mesh.rotation.setFromQuaternion(transformedQ.normalize());
-
+ // mesh.rotation.setFromQuaternion(transformedQ.normalize());
+ var e = new THREE.Euler().setFromQuaternion(transformedQ.normalize());
+  mesh.rotation.set(e.x, e.y, e.z);
   renderer.render(scene, camera);
 };
 
