@@ -311,7 +311,7 @@ const animate = function () {
   transformedQ = swapYZAxesInQuaternion(transformedQ);
 //  mesh.quaternion.copy(transformedQ);
 
-  mesh.rotation.setFromQuaternion(transformedQ);
+  mesh.rotation.setFromQuaternion(transformedQ.normalize());
 
   renderer.render(scene, camera);
 };
